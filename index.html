@@ -11,12 +11,13 @@
 <h3 id="curr_temp"></h3>
 <div id="chart"></div>
 <script>
+var dateFormatOptions ={ month: "2-digit" ,day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" };
 var hash = window.location.hash.substring(1);
 if (hash === "") {
 	hash = "this_24_hours";
 }
 $.getJSON( "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&timeframe="+hash, function( data ) {
-	$('#curr_temp').html('Aktuell: '+data.result[data.result.length-1].temp+'&deg;C')
+	$('#curr_temp').html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp)': '+data.result[data.result.length-1].temp+'&deg;C')
 	c3.generate({
 	    data: {
 	      x: 'timestamp',
