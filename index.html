@@ -6,35 +6,134 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" charset="utf-8"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/c3/0.4.9/c3.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ <style type="text/css">
+/*
+* Usage:
+*
+* <div class="sk-spinner sk-spinner-wave">
+* <div class="sk-rect1"></div>
+* <div class="sk-rect2"></div>
+* <div class="sk-rect3"></div>
+* <div class="sk-rect4"></div>
+* <div class="sk-rect5"></div>
+* </div>
+*
+*/
+.sk-spinner-wave.sk-spinner {
+margin: 0 auto;
+width: 50px;
+height: 30px;
+text-align: center;
+font-size: 10px; }
+.sk-spinner-wave div {
+background-color: #333;
+height: 100%;
+width: 6px;
+display: inline-block;
+-webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+animation: sk-waveStretchDelay 1.2s infinite ease-in-out; }
+.sk-spinner-wave .sk-rect2 {
+-webkit-animation-delay: -1.1s;
+animation-delay: -1.1s; }
+.sk-spinner-wave .sk-rect3 {
+-webkit-animation-delay: -1s;
+animation-delay: -1s; }
+.sk-spinner-wave .sk-rect4 {
+-webkit-animation-delay: -0.9s;
+animation-delay: -0.9s; }
+.sk-spinner-wave .sk-rect5 {
+-webkit-animation-delay: -0.8s;
+animation-delay: -0.8s; }
+@-webkit-keyframes sk-waveStretchDelay {
+0%, 40%, 100% {
+-webkit-transform: scaleY(0.4);
+transform: scaleY(0.4); }
+20% {
+-webkit-transform: scaleY(1);
+transform: scaleY(1); } }
+@keyframes sk-waveStretchDelay {
+0%, 40%, 100% {
+-webkit-transform: scaleY(0.4);
+transform: scaleY(0.4); }
+20% {
+-webkit-transform: scaleY(1);
+transform: scaleY(1); } }
+</style>
 </head>
 <body>
+<div id="spinner" class="sk-spinner sk-spinner-wave">
+<div class="sk-rect1"></div>
+<div class="sk-rect2"></div>
+<div class="sk-rect3"></div>
+<div class="sk-rect4"></div>
+<div class="sk-rect5"></div>
+</div>
 <h3 id="curr_temp"></h3>
 <div id="chart"></div>
+<a href="#this_year">alles</a><a href="#this_week">diese woche</a>
 <script>
 var dateFormatOptions ={ month: "2-digit" ,day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" };
+
+var chart = null;
+
+var requestChart = function(hash) {
+  if (chart) chart = chart.destroy();
+  $("#spinner").show();
+  $.getJSON( "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&timeframe="+hash, function( data ) {
+    var min = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.min(a,b); });
+    var max = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.max(a,b); });
+    var avg = data.result.reduce(function(sum, a) { return sum + a.temp },0)/(data.result.length!=0?data.result.length:1);
+    $('#curr_temp').html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp))+ ': '+data.result[data.result.length-1].temp+'&deg;C, min='+min+'&deg;C, max='+max+'&deg;C, avg='+Math.round(avg*10)/10+'&deg;C')
+    var middle = (new Date(data.result[data.result.length-1].timestamp) - new Date(data.result[0].timestamp)) / 2
+    console.log(middle)
+    chart = c3.generate({
+        data: {
+          x: 'timestamp',
+          xFormat: '%Y-%m-%dT%H:%M:%S%Z',
+          json: data.result,
+          keys: {x:'timestamp',value:['temp']}
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                  format: function(d) { 
+                    return new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(d));
+                  }
+                }
+            } 
+        },
+        regions: [
+          {start: new Date(data.result[0].timestamp).getTime(), end: new Date(data.result[0].timestamp).getTime() + middle}
+    ],
+    grid:{
+          y: {
+            lines: [{value: min}, {value: max}, {value: avg}]
+        }
+    }
+
+   
+    });
+    $("#spinner").hide();
+  });
+};
+
 var hash = window.location.hash.substring(1);
 if (hash === "") {
-	hash = "this_24_hours";
+  hash = "this_24_hours";
 }
-$.getJSON( "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&timeframe="+hash, function( data ) {
-	$('#curr_temp').html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp))+ ': '+data.result[data.result.length-1].temp+'&deg;C')
-	c3.generate({
-	    data: {
-	      x: 'timestamp',
-	      xFormat: '%Y-%m-%dT%H:%M:%S%Z',
-	      json: data.result,
-	      keys: {x:'timestamp',value:['temp']}
-	    },
-	    axis: {
-	        x: {
-	            type: 'timeseries',
-	            tick: {
-	            format: '%Y-%m-%dT%H:%M:%S%Z'
-	             }
-	        } 
-	    }
-	});
-});
+
+function locationHashChanged() {
+  var hash = window.location.hash.substring(1);
+  if (hash === "") {
+    hash = "this_24_hours";
+  }
+  requestChart(hash);
+}
+
+window.onhashchange = locationHashChanged;
+$(document).ready(locationHashChanged)
+
 </script>
 </body>
 </html>
