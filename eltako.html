@@ -39,7 +39,11 @@ var requestChart = function(hash) {
           x: 'timestamp',
           xFormat: '%Y-%m-%dT%H:%M:%S%Z',
           json: data.result,
-          keys: {x:'timestamp',value:['temp', 'hum', 'batt']}
+          keys: {x:'timestamp',value:['temp', 'hum', 'batt']},
+                  axes: {
+            temp: 'y',
+            hum: 'y2'
+        }
         },
         axis: {
             x: {
@@ -49,7 +53,10 @@ var requestChart = function(hash) {
                     return new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(d));
                   }
                 }
-            } 
+            },
+                    y2: {
+            show: true
+        }
         },
         regions: [
           {start: new Date(data.result[0].timestamp).getTime(), end: new Date(data.result[0].timestamp).getTime() + middle}
