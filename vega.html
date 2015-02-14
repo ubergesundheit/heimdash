@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" charset="utf-8"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/vega/1.4.3/vega.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+<body>
+<div id="vis"></div>
+<script type="text/javascript">
+// parse a spec and create a visualization view
+function parse(spec) {
+    vg.parse.spec(spec, function(chart) { chart({el:"#vis"}).update(); });
+}
+parse("spec.json");
+</script>
+</body>
+</html>
