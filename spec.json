@@ -33,11 +33,6 @@
         "data": "temps",
         "field": "data.temp"
       }
-    },
-    {
-      "name": "color",
-      "type": "ordinal",
-      "range": "category10"
     }
   ],
   "axes": [
@@ -67,9 +62,15 @@
             "scale": "y",
             "field": "data.temp"
           },
-   
-"strokeWidth": {"value": 2},
-"stroke": {"value": "red"}
+          "strokeWidth": {
+            "value": 2
+          },
+          "stroke": {
+            "value": "red"
+          },
+          "interpolate": {
+            "value": "cardinal"
+          }
         }
       }
     }
