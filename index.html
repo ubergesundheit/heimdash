@@ -93,7 +93,7 @@ function locationHashChanged() {
     hash = "this_24_hours";
   }
   requestChart("in:"+hash)
-  requestChart("out"+hash);
+  requestChart("out:"+hash);
 }
 
 window.onhashchange = locationHashChanged;
