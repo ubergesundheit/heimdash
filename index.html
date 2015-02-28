@@ -37,9 +37,9 @@ var requestChart = function(hash) {
   var hashComponents = hash.split(":");
   var collection = collectionNames[hashComponents[0]];
   var timeframe = hashComponents[1];
-  
+
   var chartId = collection === "eltako" ? '#chart2' : '#chart';
-  
+
   if (chart) chart = chart.destroy();
   $("#spinner").show();
   $.getJSON( "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection="+collection+"&timezone=3600&timeframe="+timeframe, function( data ) {
@@ -61,11 +61,11 @@ var requestChart = function(hash) {
             x: {
                 type: 'timeseries',
                 tick: {
-                  format: function(d) { 
+                  format: function(d) {
                     return new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(d));
                   }
                 }
-            } 
+            }
         },
         regions: [
           {start: new Date(data.result[0].timestamp).getTime(), end: new Date(data.result[0].timestamp).getTime() + middle}
@@ -76,7 +76,7 @@ var requestChart = function(hash) {
         }
     }
 
-   
+
     });
     $("#spinner").hide();
   });
