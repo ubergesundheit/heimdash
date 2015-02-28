@@ -16,11 +16,11 @@
 <div class="sk-rect4"></div>
 <div class="sk-rect5"></div>
 </div>
-<h3 id="curr_temp"></h3>
+<h3 id="curr_temp_in"></h3>
 <div id="chart"></div>
+<h3 id="curr_temp_out"></h3>
 <div id="chart2"></div>
 <div>
-Aussen:
 <a href="#this_year">dieses jahr</a>&nbsp;<a href="#this_week">diese woche</a>&nbsp;<a href="#this_month">dieser monat</a>&nbsp;<a href="#this_24_hours">24 Stunden</a>
 </div>
 <script>
@@ -46,7 +46,7 @@ var requestChart = function(hash) {
     var min = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.min(a,b); });
     var max = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.max(a,b); });
     var avg = data.result.reduce(function(sum, a) { return sum + a.temp },0)/(data.result.length!=0?data.result.length:1);
-    $('#curr_temp').html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp))+ ': '+data.result[data.result.length-1].temp+'&deg;C, min='+min+'&deg;C, max='+max+'&deg;C, avg='+Math.round(avg*10)/10+'&deg;C')
+    $('#curr_temp_'+hashComponents[0]).html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp))+ ': '+data.result[data.result.length-1].temp+'&deg;C, min='+min+'&deg;C, max='+max+'&deg;C, avg='+Math.round(avg*10)/10+'&deg;C')
     var middle = (new Date(data.result[data.result.length-1].timestamp) - new Date(data.result[0].timestamp)) / 2
     console.log(middle)
     chart = c3.generate({
