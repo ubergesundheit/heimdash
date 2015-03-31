@@ -1,0 +1,45 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+body {
+  padding: 0;
+  margin: 0;
+  color: #2C3E50;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+.row {
+  display: flex;
+  height: 50%
+}
+
+.cell {
+  flex: 1;
+  text-align: center;
+  background-color: #9684A3;
+}
+
+
+.in {
+  background-color: #F1C40F;
+}
+
+.out {
+  background-color: #E67E22; 
+}
+
+.dmth {
+  background-color: #2ECC71;
+}
+
+.kli {
+  background-color: #3498DB;
+}
+
+h1 {
+  font-size: 96px;
+}
