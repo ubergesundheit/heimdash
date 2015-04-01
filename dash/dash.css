@@ -20,20 +20,19 @@ html, body {
 .cell {
   flex: 1;
   text-align: center;
-  background-color: #9684A3;
 }
 
 
-.in {
+.living {
   background-color: #F1C40F;
 }
 
 .out {
-  background-color: #E67E22; 
+  background-color: #2ECC71;
 }
 
 .dmth {
-  background-color: #2ECC71;
+  background-color: #E67E22;
 }
 
 .kli {
@@ -42,4 +41,5 @@ html, body {
 
 h1 {
   font-size: 96px;
+  margin: 0px
 }
