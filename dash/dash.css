@@ -12,19 +12,10 @@ html, body {
   
 }
 
-
 .row {
   display: flex;
   height: 50%
 
-}
-
-.last-update {
-  display: block;
-  position: absolute;
-  bottom: 0px;
-  color: #6C7A89;
-  width: 100%;
 }
 
 .cell {
@@ -33,23 +24,34 @@ html, body {
   position: relative;
 }
 
-.living {
+#living {
   background-color: #F1C40F;
 }
 
-.out {
+#out {
   background-color: #2ECC71;
 }
 
-.dmth {
+#dmth {
   background-color: #E67E22;
 }
 
-.kli {
+#kli {
   background-color: #3498DB;
 }
 
-h1 {
-  font-size: 96px;
+.temp {
+  font-size: 72px;
   margin: 0px
 }
+
+.time {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  color: #6C7A89;
+  font-size: 10px;
+}
+
+
