@@ -1,8 +1,73 @@
+var config = {
+  "kli": {
+    "source": "https://geraldpape.io/kli/latest",
+    "attrs": {
+      "time": "TIMESTAMP",
+      "temp": "AirTC_Avg",
+      "hum": "RH_Avg",
+      "rain": "Rain_Tot"
+    }
+  },
+  "living": {
+    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&timeframe=this_15_minutes",
+    "attrs": {
+      "time": "timestamp",
+      "temp": "temp"
+    }
+  },
+  "out": {
+    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=eltako&timezone=3600&timeframe=this_30_minutes",
+    "attrs": {
+      "time": "timestamp",
+      "temp": "temp",
+      "hum": "hum",
+      "batt": "batt"
+    }
+  }
+};
+
+var units = {
+  "temp": "&deg;",
+  "hum": "%",
+  "batt": "V",
+  "rain": "mm",
+  "time": ""
+};
+
+
 var dateFormatOptions = { hour: "2-digit", minute: "2-digit" };
 var DateFormatter = new Intl.DateTimeFormat('de-DE',dateFormatOptions);
 
+//var sparklineOptions = {dotRadius: 2.5, lineWidth: 1, endColor: "#2C3E50", lineColor: "#2C3E50", width: width * 0.6};
+
+Object.keys(config).forEach(function(item) {
+  var elem = document.getElementById(item);
+  var elem_conf = config[item];
+  
+  var width = elem.scrollWidth;
+  
+  nanoajax.ajax(elem_conf.source, function (code, responseText){
+    var data = JSON.parse(responseText);
+    
+    var lastValues = data.result[data.result.length -1];
+    
+    var values = {};
+    
+    Object.keys(elem_conf.attrs).forEach(function (item){
+      values[item] = lastValues[elem_conf.attrs[item]];
+    });
+
+    values.temp = values.temp.toFixed(1);
+    values.time = DateFormatter.format(new Date(values.time));
+
+    Object.keys(values).forEach(function(item){
+      elem.getElementsByClassName(item)[0].innerHTML = values[item] + units[item];
+    });
+  });
+});
 
 
+/*
 [].slice.call(document.getElementsByClassName("cell")).forEach(function(elem) {
   var url = elem.getAttribute("dash-datasource");
   var temp_attr_name = elem.getAttribute("dash-temp-attributename");
@@ -26,3 +91,4 @@ var DateFormatter = new Intl.DateTimeFormat('de-DE',dateFormatOptions);
   });
 
 });
+*/
