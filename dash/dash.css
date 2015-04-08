@@ -41,7 +41,8 @@ html, body {
 }
 
 .temp {
-  font-size: 72px;
+  font-size: 20vw;
+  line-height: 40vh;
   margin: 0px
 }
 
