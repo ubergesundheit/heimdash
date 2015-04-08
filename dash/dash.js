@@ -9,14 +9,14 @@ var config = {
     }
   },
   "living": {
-    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&timeframe=this_15_minutes",
+    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=whng_temps&timezone=3600&latest=1",
     "attrs": {
       "time": "timestamp",
       "temp": "temp"
     }
   },
   "out": {
-    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=eltako&timezone=3600&timeframe=this_30_minutes",
+    "source": "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection=eltako&timezone=3600&latest=1",
     "attrs": {
       "time": "timestamp",
       "temp": "temp",
