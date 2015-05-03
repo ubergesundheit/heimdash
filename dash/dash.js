@@ -40,32 +40,69 @@ var DateFormatter = new Intl.DateTimeFormat('de-DE',dateFormatOptions);
 
 //var sparklineOptions = {dotRadius: 2.5, lineWidth: 1, endColor: "#2C3E50", lineColor: "#2C3E50", width: width * 0.6};
 
-Object.keys(config).forEach(function(item) {
-  var elem = document.getElementById(item);
-  var elem_conf = config[item];
-  
-  var width = elem.scrollWidth;
-  
-  nanoajax.ajax(elem_conf.source, function (code, responseText){
-    var data = JSON.parse(responseText);
-    
-    var lastValues = data.result[data.result.length -1];
-    
-    var values = {};
-    
-    Object.keys(elem_conf.attrs).forEach(function (item){
-      values[item] = lastValues[elem_conf.attrs[item]];
-    });
+var update = function () {
+  Object.keys(config).forEach(function(item) {
+    var elem = document.getElementById(item);
+    elem.getElementsByClassName("temp")[0].innerHTML = "-";
+    var elem_conf = config[item];
 
-    values.temp = values.temp.toFixed(1);
-    values.time = DateFormatter.format(new Date(values.time));
+    var width = elem.scrollWidth;
 
-    Object.keys(values).forEach(function(item){
-      elem.getElementsByClassName(item)[0].innerHTML = values[item] + units[item];
+    nanoajax.ajax(elem_conf.source, function (code, responseText){
+      var data = JSON.parse(responseText);
+
+      var lastValues = data.result[data.result.length -1];
+
+      var values = {};
+
+      Object.keys(elem_conf.attrs).forEach(function (item){
+        values[item] = lastValues[elem_conf.attrs[item]];
+      });
+
+      values.temp = values.temp.toFixed(1);
+      values.time = DateFormatter.format(new Date(values.time));
+
+      Object.keys(values).forEach(function(item){
+        elem.getElementsByClassName(item)[0].innerHTML = values[item] + units[item];
+      });
     });
   });
-});
+};
 
+update();
+
+
+// Set the name of the hidden property and the change event for visibility
+var hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+  hidden = "hidden";
+  visibilityChange = "visibilitychange";
+} else if (typeof document.mozHidden !== "undefined") {
+  hidden = "mozHidden";
+  visibilityChange = "mozvisibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+  hidden = "msHidden";
+  visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+  hidden = "webkitHidden";
+  visibilityChange = "webkitvisibilitychange";
+}
+
+function handleVisibilityChange() {
+  if (document[hidden]) {
+  } else {
+    //videoElement.play();
+   update();
+  }
+}
+
+// Warn if the browser doesn't support addEventListener or the Page Visibility API
+if (typeof document.addEventListener === "undefined" ||
+  typeof document[hidden] === "undefined") {
+  alert("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+} else {
+  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+}
 
 /*
 [].slice.call(document.getElementsByClassName("cell")).forEach(function(elem) {
@@ -73,21 +110,21 @@ Object.keys(config).forEach(function(item) {
   var temp_attr_name = elem.getAttribute("dash-temp-attributename");
     var time_attr_name = elem.getAttribute("dash-time-attributename");
   var width = elem.scrollWidth;
-  
+
   nanoajax.ajax(url, function (code, responseText) {
     var data = JSON.parse(responseText);
-    
+
     var tempValue = data.result[data.result.length -1][temp_attr_name].toFixed(1);
-    
+
     var lastUpdateValue = DateFormatter.format(new Date(data.result[data.result.length -1][time_attr_name]));
-    
+
       elem.getElementsByClassName("hero-temp")[0].innerHTML = tempValue + "&deg;";
-    
+
       elem.getElementsByClassName("last-update")[0].textContent = lastUpdateValue;
-    
+
     var temps = data.result.map(function (item) { return item[temp_attr_name];});
     var sparkline = new Sparkline2(elem.getElementsByClassName("sparkline")[0], {dotRadius: 2.5, lineWidth: 1, endColor: "#2C3E50", lineColor: "#2C3E50", width: width * 0.6});
-    sparkline.draw(temps); 
+    sparkline.draw(temps);
   });
 
 });
