@@ -15,7 +15,7 @@ var config = {
     "rain": "Rain_Tot"
   },
   "tmps_in0": {
-    "time": "timestamp",
+    "timestamp": "timestamp",
     "temp": "temp"
   },
   "tmps_out": {
