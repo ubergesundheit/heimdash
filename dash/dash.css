@@ -9,13 +9,11 @@ body {
 html, body {
   height: 100%;
   font-family: 'Montserrat', sans-serif;
-  
 }
 
 .row {
   display: flex;
   height: 50%
-
 }
 
 .cell {
@@ -24,15 +22,27 @@ html, body {
   position: relative;
 }
 
-#living {
+.cell:after, .timestamp {
+  position: absolute;
+  color: #687581;
+  font-size: 4vw;
+}
+
+.cell:after {
+  top: 0px;
+  left: 0px;
+  content: attr(title);
+}
+
+#tmps_in0 {
   background-color: #F1C40F;
 }
 
-#out {
+#tmps_out {
   background-color: #2ECC71;
 }
 
-#dmth {
+#tmps_in1 {
   background-color: #E67E22;
 }
 
@@ -46,13 +56,9 @@ html, body {
   margin: 0px
 }
 
-.time {
-  display: block;
-  position: absolute;
+.timestamp {
   bottom: 0px;
   right: 0px;
-  color: #687581;
-  font-size: 4vw;
 }
 
 

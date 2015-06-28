@@ -2,7 +2,6 @@
 <!-- source: http://jsbin.com/zalupuwaki/4/edit?html,css,js,output -->
 <html>
 <head>
-<script src="//rawgit.com/tmcw/sparkline/6e1959384cfc567ccfe73ef5a5b0f8d5a68b5598/source/sparkline.js"></script>
 <script src="//rawgit.com/yanatan16/nanoajax/master/nanoajax.min.js"></script>
 <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
 <link href="dash.css" rel="stylesheet" type="text/css" />
@@ -16,26 +15,29 @@
 </head>
 <body>
 <div class="row">
-  <div class="cell" id="out">
-      <h1 class="temp">-</h1>
-      <span class="sparkline"></span>
-      <span class="time"></span>
-    <span class="hum"></span>
-        <span class="batt"></span>
+  <div class="cell" id="tmps_out" title="Draußen">
+    <h1 data-default="-" class="temp">-</h1>
+    <span data-default="" class="timestamp"></span>
+    <span data-default="" class="hum"></span>
+    <span data-default="" class="batt"></span>
   </div>
-  <div class="cell" id="kli">
-    <h1 class="temp">-</h1>
-    <span class="sparkline"></span>
-    <span class="time"></span>
-        <span class="hum"></span>
-        <span class="rain"></span>
+  <div class="cell" id="kli" title="Klimatologie">
+    <h1 data-default="-" class="temp">-</h1>
+    <span data-default="" class="timestamp"></span>
+    <span data-default="" class="hum"></span>
+    <span data-default="" class="rain"></span>
   </div>
 </div>
 <div class="row">
-  <div class="cell" id="living">
-    <h1 class="temp">-</h1>
-    <span class="sparkline"></span>
-    <span class="time"></span>
+  <div class="cell" id="tmps_in1" title="Drinnen Flur">
+    <h1 data-default="-" class="temp">-</h1>
+    <span data-default="" class="timestamp"></span>
+    <span data-default="" class="hum"></span>
+    <span data-default="" class="batt"></span>
+  </div>
+  <div class="cell" id="tmps_in0" title="Drinnen Wohnzimmer">
+    <h1 data-default="-" class="temp">-</h1>
+    <span data-default="" class="timestamp"></span>
   </div>
 </div>
 <script src="dash.js"></script>
