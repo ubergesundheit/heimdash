@@ -47,8 +47,10 @@ var fetchTheData = function (callbacks) {
   });
   // just make ajax calls to the urls from newConfig..
   Object.keys(sourceConfig).forEach(function (key) {
-    nanoajax.ajax(sourceConfig[key], function (code, responseText) {
-      callbacks[key].bind(this)(JSON.parse(responseText));
+    fetch(sourceConfig[key]).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+      callbacks[key].bind(this)(json);
     }.bind(this));
   }, this);
 };
