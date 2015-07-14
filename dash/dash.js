@@ -44,6 +44,7 @@ var fetchTheData = function (callbacks) {
   // reset views..
   [].slice.call(document.querySelectorAll("[data-default]")).forEach(function(elem) {
     elem.innerHTML = elem.dataset.default;
+    elem.classList.add("loading");
   });
   // just make ajax calls to the urls from newConfig..
   Object.keys(sourceConfig).forEach(function (key) {
@@ -85,7 +86,9 @@ var renderDataItem = function (item) {
   Object.keys(conf).filter(function (c) { return c !== "timestamp"; }).forEach(function (cc) { item[conf[cc]] = item[conf[cc]].toFixed(1); }, this);
   // apply values to dom elements
   Object.keys(conf).forEach(function (confKey) {
-    elem.getElementsByClassName(confKey)[0].innerHTML = item[conf[confKey]] + units[confKey];
+    var dataNode = elem.getElementsByClassName(confKey)[0];
+    dataNode.innerHTML = item[conf[confKey]] + units[confKey];
+    dataNode.classList.remove("loading");
   }, this);
 };
 
