@@ -1,9 +1,9 @@
 "use strict";
 var dateFormatOptions = { weekday: "long", hour: "2-digit", minute: "2-digit" };
-var DateFormatter = new Intl.DateTimeFormat('de-DE',dateFormatOptions);
+var DateFormatter = new Intl.DateTimeFormat('de-DE', dateFormatOptions);
 
 var sourceConfig = {
-  "kli": "https://geraldpape.io/kli/latest",
+  //"kli": "https://geraldpape.io/kli/latest",
   "heimdb": "https://geraldpape.io/heimdb/latest"
 };
 
@@ -29,6 +29,11 @@ var config = {
     "temp": "temp",
     "hum": "hum",
     "batt": "batt"
+  },
+  "tmps_in2": {
+    "timestamp": "timestamp",
+    "temp": "temp",
+    "hum": "hum"
   }
 };
 
@@ -42,30 +47,30 @@ var units = {
 
 var fetchTheData = function (callbacks) {
   // reset views..
-  [].slice.call(document.querySelectorAll("[data-default]")).forEach(function(elem) {
+  Array.from(document.querySelectorAll("[data-default]")).forEach(elem => {
     elem.innerHTML = elem.dataset.default;
     elem.classList.add("loading");
   });
   // just make ajax calls to the urls from newConfig..
-  Object.keys(sourceConfig).forEach(function (key) {
-    fetch(sourceConfig[key]).then(function (response) {
-      return response.json();
-    }).then(function (json) {
-      callbacks[key].bind(this)(json);
-    }.bind(this));
-  }, this);
+  Object.keys(sourceConfig).forEach(key =>
+      fetch(sourceConfig[key])
+      .then(response => response.json())
+      .then(json => callbacks[key](json))
+      .catch(error => {
+        //alert(error);
+        console.log(error, key)
+      })
+  );
 };
 
 var handleHeimDB = function (data) {
   // response data contains an array with collection-items
-  data.forEach(function (item) {
+  data.forEach(item => {
     // flatten the item.. we want the data in the data key to be on the root level of the object
-    Object.keys(item.data).forEach(function (key) {
-      item[key] = item.data[key];
-    });
+    Object.keys(item.data).forEach(key => item[key] = item.data[key]);
     // render item to dom
     renderDataItem(item);
-  }, this);
+  });
 };
 
 var handleKli = function (data) {
@@ -81,19 +86,24 @@ var renderDataItem = function (item) {
   var conf = config[item.collection];
   var elem = document.getElementById(item.collection);
   // prepare the timestamp..
-  item[conf.timestamp] = DateFormatter.format(new Date(item[conf.timestamp]));
+  item[conf.timestamp] = prepareTimestamp(item[conf.timestamp]);
   // only allow one decimal for the rest of the values
-  Object.keys(conf).filter(function (c) { return c !== "timestamp"; }).forEach(function (cc) { item[conf[cc]] = item[conf[cc]].toFixed(1); }, this);
+  Object.keys(conf).filter(c => c !== "timestamp").forEach(cc => item[conf[cc]] = item[conf[cc]].toFixed(1));
   // apply values to dom elements
-  Object.keys(conf).forEach(function (confKey) {
+  Object.keys(conf).forEach(confKey => {
+    var htmlVal = item[conf[confKey]];
     var dataNode = elem.getElementsByClassName(confKey)[0];
-    dataNode.innerHTML = item[conf[confKey]] + units[confKey];
+    dataNode.innerHTML = htmlVal + units[confKey];
     dataNode.classList.remove("loading");
-  }, this);
+  });
+};
+
+var prepareTimestamp = function (timestamp) {
+  return DateFormatter.format(new Date(timestamp));
 };
 
 fetchTheData({
-  "kli": handleKli,
+  //"kli": handleKli,
   "heimdb": handleHeimDB
 });
 
@@ -117,7 +127,7 @@ function handleVisibilityChange() {
   if (document[hidden]) {
   } else {
     fetchTheData({
-      "kli": handleKli,
+      //"kli": handleKli,
       "heimdb": handleHeimDB
     });
   }

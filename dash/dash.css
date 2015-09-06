@@ -46,6 +46,10 @@ html, body {
   background-color: #E67E22;
 }
 
+#tmps_in2 {
+  background-color: #73B9DC;
+}
+
 #kli {
   background-color: #3498DB;
 }
@@ -61,17 +65,17 @@ html, body {
   right: 0px;
 }
 
-.loading { 
+.loading {
  	animation-name: pulse;
  	animation-duration: 1s;
  	animation-iteration-count: infinite;
  	animation-timing-function: ease-out;
  	animation-fill-mode: forwards;
-} 
+}
 
-@keyframes pulse { 
-    0% { transform: scale(1); } 
-    50% { transform: scale(.9); } 
-    100% { transform: scale(1); } 
-} 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(.9); }
+    100% { transform: scale(1); }
+}
 
