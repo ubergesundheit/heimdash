@@ -2,11 +2,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link href="//cdnjs.cloudflare.com/ajax/libs/c3/0.4.9/c3.min.css" rel="stylesheet" type="text/css">
 <link href="spinner.css" rel="stylesheet" type="text/css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" charset="utf-8"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/c3/0.4.9/c3.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 </head>
 <body>
 <div id="spinner" class="sk-spinner sk-spinner-wave">
@@ -16,88 +13,55 @@
 <div class="sk-rect4"></div>
 <div class="sk-rect5"></div>
 </div>
-<h3 id="curr_temp_in"></h3>
 <div id="chart"></div>
-<h3 id="curr_temp_out"></h3>
-<div id="chart2"></div>
-<div>
-<a href="#this_year">dieses jahr</a>&nbsp;<a href="#this_week">diese woche</a>&nbsp;<a href="#this_month">dieser monat</a>&nbsp;<a href="#this_24_hours">24 Stunden</a>
-</div>
 <script>
 var dateFormatOptions = { month: "2-digit" ,day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" };
+var minute = 60000;
 
-var collectionNames = {
-  "in": "whng_temps",
-  "out": "eltako"
-};
+var collections = ["tmps_out", "tmps_in0", "tmps_in1", "tmps_in2"];
 
-var chart = null;
+fetch("https://geraldpape.io/heimdb/all")
+  .then(res => res.json())
+  .then(raw_data => {
+    var dataByTime = new Map();
 
-var requestChart = function(hash) {
-  var hashComponents = hash.split(":");
-  var collection = collectionNames[hashComponents[0]];
-  var timeframe = hashComponents[1];
+    raw_data.forEach(m => {
+      var unixtime = new Date(m.timestamp).getTime();
 
-  var chartId = collection === "eltako" ? '#chart2' : '#chart';
+      var roundedTime = (Math.floor(unixtime / minute) * minute).toString();
 
-  if (chart) chart = chart.destroy();
-  $("#spinner").show();
-  $.getJSON( "//api.keen.io/3.0/projects/54bbebe996773d4b95ebd8ef/queries/extraction?api_key=a7857e27ed6fb6c898946cec28851c33daaa777d32685960cd9afba293236d54a1c8f168d0a1fb3eb432a9e2bae77a9aa013d7bfd83090261fb2352bea055f58b46c2d66d1edcfcdabcace8cc2ec314058fdbf24c3de2968874825d79ed175ad1d0009d5f720efe9097ae3037128d912&event_collection="+collection+"&timezone=3600&timeframe="+timeframe, function( data ) {
-    var min = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.min(a,b); });
-    var max = data.result.map(function(el) { return el.temp; }).reduce(function(a,b) { return Math.max(a,b); });
-    var avg = data.result.reduce(function(sum, a) { return sum + a.temp },0)/(data.result.length!=0?data.result.length:1);
-    $('#curr_temp_'+hashComponents[0]).html(new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(data.result[data.result.length-1].timestamp))+ ': '+data.result[data.result.length-1].temp+'&deg;C, min='+min+'&deg;C, max='+max+'&deg;C, avg='+Math.round(avg*10)/10+'&deg;C')
-    var middle = (new Date(data.result[data.result.length-1].timestamp) - new Date(data.result[0].timestamp)) / 2
-    console.log(middle)
-    chart = c3.generate({
-        bindto: chartId,
-        data: {
-          x: 'timestamp',
-          xFormat: '%Y-%m-%dT%H:%M:%S%Z',
-          json: data.result,
-          keys: {x:'timestamp',value:['temp']}
-        },
-        axis: {
-            x: {
-                type: 'timeseries',
-                tick: {
-                  format: function(d) {
-                    return new Intl.DateTimeFormat('de-DE',dateFormatOptions).format(new Date(d));
-                  }
-                }
-            }
-        },
-        regions: [
-          {start: new Date(data.result[0].timestamp).getTime(), end: new Date(data.result[0].timestamp).getTime() + middle}
-    ],
-    grid:{
-          y: {
-            lines: [{value: min}, {value: max}, {value: avg}]
+      if (!dataByTime[roundedTime]) {
+        dataByTime[roundedTime] = {};
+      }
+
+      dataByTime[roundedTime][m.collection] = m.data;
+    });
+
+    var arr = Object.keys(dataByTime).map(time => {
+      var d = [new Date(parseInt(time))];
+      collections.forEach(c => {
+        if (dataByTime[time][c]) {
+          d.push(dataByTime[time][c].temp);
+        } else {
+          d.push(null);
         }
-    }
-
+      });
+      return d;
 
     });
-    $("#spinner").hide();
+
+    collections.unshift("date");
+
+    new Dygraph(document.getElementById("chart"), arr.reverse(), {
+      showRoller: true,
+      rollPeriod: 30,
+      labels: collections,
+      width: 1440
+    });
+
+    console.log("done");
+    document.getElementById("spinner").style.display = "none";
   });
-};
-
-var hash = window.location.hash.substring(1);
-if (hash === "") {
-  hash = "this_24_hours";
-}
-
-function locationHashChanged() {
-  var hash = window.location.hash.substring(1);
-  if (hash === "") {
-    hash = "this_24_hours";
-  }
-  requestChart("in:"+hash)
-  requestChart("out:"+hash);
-}
-
-window.onhashchange = locationHashChanged;
-$(document).ready(locationHashChanged)
 
 </script>
 </body>
