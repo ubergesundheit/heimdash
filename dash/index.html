@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.de-DE"></script>
 <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
 <link href="dash.css" rel="stylesheet" type="text/css" />
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,6 +14,12 @@
 <title>Dash</title>
 </head>
 <body>
+<div class="row small-row top-row hide-fullscreen">
+  <div class="cell" id="fullscreenbtn">Go to Fullscreen</div>
+</div>
+<div class="row smaller-row bottom-row show-fullscreen">
+  <div class="cell" id="thetime">--:--</div>
+</div>
 <div class="row">
   <div class="cell" id="tmps_out" title="Draußen">
     <h1 data-default="-" class="temp">-</h1>

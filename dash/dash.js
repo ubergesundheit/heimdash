@@ -2,6 +2,29 @@
 var dateFormatOptions = { weekday: "long", hour: "2-digit", minute: "2-digit" };
 var DateFormatter = new Intl.DateTimeFormat('de-DE', dateFormatOptions);
 
+var theTimeDateFormatOptions = {
+  day: "numeric",
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  hour: "2-digit",
+  minute: "2-digit"
+};
+var TheTimeDateFormatter = new Intl.DateTimeFormat('de-DE', theTimeDateFormatOptions);
+
+var timeTimeout
+var setTime = function (firstRun) {
+  var elem = document.querySelector("#thetime")
+  elem.replaceChild(document.createTextNode(TheTimeDateFormatter.format(new Date())), elem.firstChild)
+  //elem.appendChild(document.createTextNode(TheTimeDateFormatter.format(new Date())))
+  var runAfter = 30000
+  if (firstRun === true) {
+    runAfter = 60000 - Date.now() % (60000)
+  }
+  timeTimeout = setTimeout(setTime, runAfter)
+}
+
+
 var sourceConfig = {
   //"kli": "https://geraldpape.io/kli/latest",
   "heimdb": "https://geraldpape.io/heimdb/latest"
@@ -45,6 +68,10 @@ var units = {
   "timestamp": ""
 };
 
+var fetchAllowed = false
+function allowFetch () {
+  fetchAllowed = true
+}
 var fetchTheData = function (callbacks) {
   // reset views..
   Array.from(document.querySelectorAll("[data-default]")).forEach(elem => {
@@ -56,6 +83,10 @@ var fetchTheData = function (callbacks) {
       fetch(sourceConfig[key])
       .then(response => response.json())
       .then(json => callbacks[key](json))
+      .then(function () {
+        fetchAllowed = false
+        setTimeout(allowFetch, 30000)
+      })
       .catch(error => {
         //alert(error);
         console.log(error, key)
@@ -126,10 +157,13 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 function handleVisibilityChange() {
   if (document[hidden]) {
   } else {
-    fetchTheData({
-      //"kli": handleKli,
-      "heimdb": handleHeimDB
-    });
+    console.log(fetchAllowed)
+    if (fetchAllowed === true) {
+      fetchTheData({
+        //"kli": handleKli,
+        "heimdb": handleHeimDB
+      });
+    }
   }
 }
 
@@ -141,3 +175,31 @@ if (typeof document.addEventListener === "undefined" ||
   document.addEventListener(visibilityChange, handleVisibilityChange, false);
 }
 
+function toggleFullScreen() {
+  // init time..
+  setTime(true)
+  if (!document.fullscreenElement &&    // alternative standard method
+      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
+document.getElementById("fullscreenbtn").addEventListener("touchend", toggleFullScreen, false)

@@ -13,7 +13,19 @@ html, body {
 
 .row {
   display: flex;
-  height: 50%
+  height: 46%; //50%;
+}
+
+.small-row {
+  height: 8%;
+}
+
+.smaller-row {
+  height: 4%;
+}
+
+.top-row, .bottom-row {
+  background-color: #34495E;
 }
 
 .cell {
@@ -79,3 +91,43 @@ html, body {
     100% { transform: scale(1); }
 }
 
+#fullscreenbtn, #thetime {
+  color: #ecf0f1;
+  margin: auto;
+}
+
+.show-fullscreen {
+  display: none;
+}
+
+:-webkit-full-screen .show-fullscreen {
+  display: flex;
+}
+
+:-webkit-full-screen .smaller-row {
+  height: 4% !important;
+}
+
+:-webkit-full-screen .hide-fullscreen {
+  display: none;
+}
+
+:-moz-full-screen .hide-fullscreen {
+  display: none;
+}
+
+:fullscreen .hide-fullscreen {
+  display: none;
+}
+
+:-webkit-full-screen .row {
+  height: 48%;
+}
+
+:-moz-full-screen .row {
+  height: 48%;
+}
+
+:fullscreen .row {
+  height: 48%;
+}
