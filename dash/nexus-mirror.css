@@ -1,13 +1,32 @@
-body {
-  transform: scale(0.95);
-  background: black;
-}
-
 .cell:after, .timestamp {
   font-size: 3vw !important;
+  opacity: 0.5;
 }
 
 .temp {
   font-size: 16vw;
   line-height: 36vh;
+}
+
+#tmps_out:after {
+  right: 20px;
+  left: auto;
+}
+#tmps_in2:after {
+  left: 20px;
+}
+#tmps_in1:after {
+  right: 20px;
+  left: auto;
+}
+#tmps_in0:after {
+  left: 20px;
+}
+#tmps_in2 .timestamp, #tmps_in0 .timestamp {
+  left: 20px;
+  right: auto;
+}
+#tmps_out .timestamp, #tmps_in1 .timestamp {
+  left: auto;
+  right: 20px;
 }

@@ -16,17 +16,21 @@ var timeTimeout
 var setTime = function (firstRun) {
   var elem = document.querySelector("#thetime")
   elem.replaceChild(document.createTextNode(TheTimeDateFormatter.format(new Date())), elem.firstChild)
-  //elem.appendChild(document.createTextNode(TheTimeDateFormatter.format(new Date())))
   var runAfter = 30000
   if (firstRun === true) {
     runAfter = 60000 - Date.now() % (60000)
   }
   timeTimeout = setTimeout(setTime, runAfter)
+  if (Date.now() % 300000 < 30000) {
+    console.log("refresh")
+    fetchTheData({
+      "heimdb": handleHeimDB
+    });
+  }
 }
 
 
 var sourceConfig = {
-  //"kli": "https://geraldpape.io/kli/latest",
   "heimdb": "https://geraldpape.io/heimdb/latest"
 };
 
@@ -127,7 +131,6 @@ var prepareTimestamp = function (timestamp) {
 };
 
 fetchTheData({
-  //"kli": handleKli,
   "heimdb": handleHeimDB
 });
 
