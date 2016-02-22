@@ -31,12 +31,6 @@ var sourceConfig = {
 };
 
 var config = {
-  "kli": {
-    "timestamp": "TIMESTAMP",
-    "temp": "AirTC_Avg",
-    "hum": "RH_Avg",
-    "rain": "Rain_Tot"
-  },
   "tmps_in0": {
     "timestamp": "timestamp",
     "temp": "temp"
@@ -64,7 +58,6 @@ var units = {
   "temp": "&deg;",
   "hum": "%",
   "batt": "V",
-  "rain": "mm",
   "timestamp": ""
 };
 
@@ -203,3 +196,12 @@ function toggleFullScreen() {
 }
 
 document.getElementById("fullscreenbtn").addEventListener("touchend", toggleFullScreen, false)
+
+// nexus 7 wall mode detection
+if (window.navigator.userAgent.includes("Nexus 7")) {
+  var fileref = document.createElement("link")
+  fileref.setAttribute("rel", "stylesheet")
+  fileref.setAttribute("type", "text/css")
+  fileref.setAttribute("href", "nexus-mirror.css")
+  document.getElementsByTagName("head")[0].appendChild(fileref)
+}

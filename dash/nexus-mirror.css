@@ -1,0 +1,13 @@
+body {
+  transform: scale(0.95);
+  background: black;
+}
+
+.cell:after, .timestamp {
+  font-size: 3vw !important;
+}
+
+.temp {
+  font-size: 16vw;
+  line-height: 36vh;
+}
