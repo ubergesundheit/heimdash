@@ -9,42 +9,55 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
 <link rel="manifest" href="manifest.json">
+<script src="swipe.js"></script>
 
 <meta name="theme-color" content="#ff7f2a">
 <title>Dash</title>
 </head>
 <body>
-<div class="row small-row top-row hide-fullscreen">
-  <div class="cell" id="fullscreenbtn">Go to Fullscreen</div>
-</div>
-<div class="row small-row bottom-row show-fullscreen">
-  <div class="cell" id="thetime">--:--</div>
-</div>
-<div class="row">
-  <div class="cell" id="tmps_out" title="Draußen">
-    <h1 data-default="-" class="temp">-</h1>
-    <span data-default="" class="timestamp"></span>
-    <span data-default="" class="hum"></span>
-    <span data-default="" class="batt"></span>
+  <div id="toggleFullscreenBtnRow" class="row small-row top-row hide-fullscreen">
+    <div class="col cell" id="fullscreenbtn">Go to Fullscreen</div>
   </div>
-  <div class="cell" id="tmps_in2" title="Schlafzimmer">
-    <h1 data-default="-" class="temp">-</h1>
-    <span data-default="" class="timestamp"></span>
-    <span data-default="" class="hum"></span>
+  <div class="row small-row bottom-row show-fullscreen">
+    <div class="col cell" id="thetime">--:--</div>
   </div>
-</div>
-<div class="row">
-  <div class="cell" id="tmps_in1" title="Flur">
-    <h1 data-default="-" class="temp">-</h1>
-    <span data-default="" class="timestamp"></span>
-    <span data-default="" class="hum"></span>
-    <span data-default="" class="batt"></span>
+  <div class="row">
+    <div class="col cell" id="tmps_out" title="Draußen">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum"></span>
+      <span data-default="" class="batt"></span>
+    </div>
+    <div class="col cell" id="tmps_in2" title="Schlafzimmer">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum"></span>
+    </div>
   </div>
-  <div class="cell" id="tmps_in0" title="Wohnzimmer">
-    <h1 data-default="-" class="temp">-</h1>
-    <span data-default="" class="timestamp"></span>
+  <div class="row">
+    <div class="col cell" id="tmps_in1" title="Flur">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum secondary-value"></span>
+      <span data-default="" class="batt secondary-value"></span>
+    </div>
+    <div class="col cell">
+      <div class="row row-nested">
+        <div class="col cell" id="tmps_in0" title="Wohnzimmer">
+          <h1 data-default="-" class="temp">-</h1>
+          <span data-default="" class="timestamp"></span>
+        </div>
+      </div>
+      <div class="row row-nested">
+        <div class="col cell" id="tmps_in3" title="Wohnzimmer (Wohn)">
+          <h1 data-default="-" class="temp">-</h1>
+          <span data-default="" class="timestamp"></span>
+          <span data-default="" class="hum secondary-value"></span>
+          <span data-default="" class="baro secondary-value"></span>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 <script src="dash.js"></script>
 </body>
 </html>

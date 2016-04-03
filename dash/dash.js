@@ -55,6 +55,12 @@ var config = {
     "timestamp": "timestamp",
     "temp": "temp",
     "hum": "hum"
+  },
+  "tmps_in3": {
+    "timestamp": "timestamp",
+    "temp": "temp",
+    "hum": "hum",
+    "baro": "baro"
   }
 };
 
@@ -62,7 +68,8 @@ var units = {
   "temp": "&deg;",
   "hum": "%",
   "batt": "V",
-  "timestamp": ""
+  "timestamp": "",
+  "baro": " hPa"
 };
 
 var fetchAllowed = false
@@ -112,18 +119,20 @@ var handleKli = function (data) {
 
 var renderDataItem = function (item) {
   var conf = config[item.collection];
-  var elem = document.getElementById(item.collection);
-  // prepare the timestamp..
-  item[conf.timestamp] = prepareTimestamp(item[conf.timestamp]);
-  // only allow one decimal for the rest of the values
-  Object.keys(conf).filter(c => c !== "timestamp").forEach(cc => item[conf[cc]] = item[conf[cc]].toFixed(1));
-  // apply values to dom elements
-  Object.keys(conf).forEach(confKey => {
-    var htmlVal = item[conf[confKey]];
-    var dataNode = elem.getElementsByClassName(confKey)[0];
-    dataNode.innerHTML = htmlVal + units[confKey];
-    dataNode.classList.remove("loading");
-  });
+  if (conf) {
+    var elem = document.getElementById(item.collection);
+    // prepare the timestamp..
+    item[conf.timestamp] = prepareTimestamp(item[conf.timestamp]);
+    // only allow one decimal for the rest of the values
+    Object.keys(conf).filter(c => c !== "timestamp").forEach(cc => item[conf[cc]] = item[conf[cc]].toFixed(1));
+    // apply values to dom elements
+    Object.keys(conf).forEach(confKey => {
+      var htmlVal = item[conf[confKey]];
+      var dataNode = elem.getElementsByClassName(confKey)[0];
+      dataNode.innerHTML = htmlVal + units[confKey];
+      dataNode.classList.remove("loading");
+    });
+  }
 };
 
 var prepareTimestamp = function (timestamp) {

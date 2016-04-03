@@ -11,9 +11,11 @@ html, body {
   font-family: 'Montserrat', sans-serif;
 }
 
-.row {
-  display: flex;
-  height: 46%; //50%;
+.row { width: 100%; display: table; table-layout: fixed; height: 50%; }
+.col { display: table-cell; }
+
+.row-nested {
+  height: 50% !important;
 }
 
 .small-row {
@@ -21,18 +23,22 @@ html, body {
   font-size: 4vh;
 }
 
-.smaller-row {
-  height: 4%;
-}
-
 .top-row, .bottom-row {
   background-color: #34495E;
 }
 
+.top-row {
+  position: absolute;
+  top: -100px;
+  z-index: 1000;
+  transition: top 0.5s ease;
+}
+
 .cell {
-  flex: 1;
   text-align: center;
   position: relative;
+  vertical-align: middle;
+  height: 100%;
 }
 
 .cell:after, .timestamp {
@@ -63,13 +69,16 @@ html, body {
   background-color: #73B9DC;
 }
 
+#tmps_in3 {
+  background-color: #F39C12;
+}
+
 #kli {
   background-color: #3498DB;
 }
 
 .temp {
   font-size: 18vw;
-  line-height: 40vh;
   margin: 0px
 }
 
@@ -102,11 +111,8 @@ html, body {
 }
 
 :-webkit-full-screen .show-fullscreen {
-  display: flex;
-}
-
-:-webkit-full-screen .smaller-row {
-  height: 4% !important;
+  //display: flex;
+  display: table;
 }
 
 :-webkit-full-screen .small-row {
@@ -135,4 +141,9 @@ html, body {
 
 :fullscreen .row {
   height: 46%;
+}
+
+.visible {
+  top: 0px !important;
+  transition: top 0.5s ease;
 }
