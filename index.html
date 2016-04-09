@@ -1,68 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.de-DE"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
+<link href="dash.css" rel="stylesheet" type="text/css" />
+<meta name="mobile-web-app-capable" content="yes">
 <meta charset="utf-8">
-<link href="spinner.css" rel="stylesheet" type="text/css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<script src="swipe.js"></script>
+
+<meta name="theme-color" content="#ff7f2a">
+<title>Dash</title>
 </head>
 <body>
-<div id="spinner" class="sk-spinner sk-spinner-wave">
-<div class="sk-rect1"></div>
-<div class="sk-rect2"></div>
-<div class="sk-rect3"></div>
-<div class="sk-rect4"></div>
-<div class="sk-rect5"></div>
-</div>
-<div id="chart"></div>
-<script>
-var dateFormatOptions = { month: "2-digit" ,day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" };
-var minute = 60000;
-
-var collections = ["tmps_out", "tmps_in0", "tmps_in1", "tmps_in2", "tmps_in3"];
-
-fetch("https://geraldpape.io/heimdb/all")
-  .then(res => res.json())
-  .then(raw_data => {
-    var dataByTime = new Map();
-
-    raw_data.forEach(m => {
-      var unixtime = new Date(m.timestamp).getTime();
-
-      var roundedTime = (Math.floor(unixtime / minute) * minute).toString();
-
-      if (!dataByTime[roundedTime]) {
-        dataByTime[roundedTime] = {};
-      }
-
-      dataByTime[roundedTime][m.collection] = m.data;
-    });
-
-    var arr = Object.keys(dataByTime).map(time => {
-      var d = [new Date(parseInt(time))];
-      collections.forEach(c => {
-        if (dataByTime[time][c]) {
-          d.push(dataByTime[time][c].temp);
-        } else {
-          d.push(null);
-        }
-      });
-      return d;
-
-    });
-
-    collections.unshift("date");
-
-    new Dygraph(document.getElementById("chart"), arr.reverse(), {
-      showRoller: true,
-      rollPeriod: 30,
-      labels: collections,
-      width: 1440
-    });
-
-    console.log("done");
-    document.getElementById("spinner").style.display = "none";
-  });
-
-</script>
+  <div id="toggleFullscreenBtnRow" class="row small-row top-row hide-fullscreen">
+    <div class="col cell" id="fullscreenbtn">Go to Fullscreen</div>
+  </div>
+  <div class="row small-row bottom-row show-fullscreen">
+    <div class="col cell" id="thetime">--:--</div>
+  </div>
+  <div class="row">
+    <div class="col cell" id="tmps_out" title="Draußen">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum"></span>
+      <span data-default="" class="batt"></span>
+    </div>
+    <div class="col cell" id="tmps_in2" title="Schlafzimmer">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum"></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col cell" id="tmps_in1" title="Flur">
+      <h1 data-default="-" class="temp">-</h1>
+      <span data-default="" class="timestamp"></span>
+      <span data-default="" class="hum secondary-value"></span>
+      <span data-default="" class="batt secondary-value"></span>
+    </div>
+    <div class="col cell">
+      <div class="row row-nested">
+        <div class="col cell" id="tmps_in0" title="Wohnzimmer">
+          <h1 data-default="-" class="temp">-</h1>
+          <span data-default="" class="timestamp"></span>
+        </div>
+      </div>
+      <div class="row row-nested">
+        <div class="col cell" id="tmps_in3" title="Wohnzimmer (Wohn)">
+          <h1 data-default="-" class="temp">-</h1>
+          <span data-default="" class="timestamp"></span>
+          <span data-default="" class="hum secondary-value"></span>
+          <span data-default="" class="baro secondary-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="dash.js"></script>
 </body>
 </html>
