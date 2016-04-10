@@ -24,14 +24,16 @@ var setTime = function (firstRun) {
   if (Date.now() % 300000 < 30000) {
     console.log("refresh")
     fetchTheData({
-      "heimdb": handleHeimDB
+      "heimdb": handleHeimDB,
+      "sensebox": handleSensebox
     });
   }
 }
 
 
 var sourceConfig = {
-  "heimdb": "https://geraldpape.io/heimdb/latest"
+  "heimdb": "https://geraldpape.io/heimdb/latest",
+  "sensebox": "https://api.opensensemap.org/boxes/57000b8745fd40c8196ad04c/sensors"
 };
 
 var config = {
@@ -61,15 +63,26 @@ var config = {
     "temp": "temp",
     "hum": "hum",
     "baro": "baro"
+  },
+  "sensebox": {
+    "timestamp": "timestamp",
+    "temp": "temp",
+    "hum": "hum",
+    "baro": "baro"
+      //,
+    //"uv": "uv",
+    //"lux": "lux"
   }
-};
+}
 
 var units = {
   "temp": "&deg;",
   "hum": "%",
   "batt": "V",
   "timestamp": "",
-  "baro": " hPa"
+  "baro": " hPa",
+  "lux": "lx",
+  "uv": "μW/cm&sup2;"
 };
 
 var fetchAllowed = false
@@ -108,6 +121,38 @@ var handleHeimDB = function (data) {
   });
 };
 
+var handleSensebox = function (data) {
+  console.log(data)
+  var firstTimestamp = new Date();
+  var senseboxData = Object.create(null);
+  data.sensors.forEach(function (sensor) {
+    switch (sensor.unit) {
+      //case "μW/cm²":
+      //  senseboxData.uv = parseFloat(sensor.lastMeasurement.value);
+      //  break;
+      //case "lx":
+      //  senseboxData.lux = parseFloat(sensor.lastMeasurement.value);
+      //  break;
+      case "hPa":
+        senseboxData.baro = parseFloat(sensor.lastMeasurement.value);
+        break;
+      case "%":
+        senseboxData.hum = parseFloat(sensor.lastMeasurement.value);
+        break;
+      case "°C":
+        senseboxData.temp = parseFloat(sensor.lastMeasurement.value);
+    }
+    var ts = new Date(sensor.lastMeasurement.updatedAt);
+    if (ts < firstTimestamp) {
+      firstTimestamp = ts;
+    }
+  });
+  // add the collection and timestamp and render..
+  senseboxData.timestamp = firstTimestamp;
+  senseboxData.collection = "sensebox";
+  renderDataItem(senseboxData);
+};
+
 var handleKli = function (data) {
   var confKey = "kli";
   // response data contains a result key which contains an array with the wanted data..
@@ -140,7 +185,8 @@ var prepareTimestamp = function (timestamp) {
 };
 
 fetchTheData({
-  "heimdb": handleHeimDB
+  "heimdb": handleHeimDB,
+  "sensebox": handleSensebox
 });
 
 // Set the name of the hidden property and the change event for visibility
@@ -166,7 +212,8 @@ function handleVisibilityChange() {
     if (fetchAllowed === true) {
       fetchTheData({
         //"kli": handleKli,
-        "heimdb": handleHeimDB
+        "heimdb": handleHeimDB,
+        "sensebox": handleSensebox
       });
     }
   }

@@ -11,11 +11,11 @@ html, body {
   font-family: 'Montserrat', sans-serif;
 }
 
-.row { width: 100%; display: table; table-layout: fixed; height: 50%; }
+.row { width: 100%; display: table; table-layout: fixed; height: 33.3%; }
 .col { display: table-cell; }
 
-.row-nested {
-  height: 50% !important;
+.last-row {
+  height: calc(33.3% + 1px);
 }
 
 .small-row {
@@ -53,29 +53,35 @@ html, body {
   content: attr(title);
 }
 
-#tmps_in0 {
-  background-color: #F1C40F;
+
+#sensebox {
+  background-color: #66BB6A;
 }
 
 #tmps_out {
-  background-color: #2ECC71;
+  background-color: #29B6F6;
 }
 
 #tmps_in1 {
-  background-color: #E67E22;
+  background-color: #F5B629;
 }
 
 #tmps_in2 {
-  background-color: #73B9DC;
+  background-color: #F1C40F;
+}
+
+#tmps_in0 {
+  background-color: #FFB74D;
 }
 
 #tmps_in3 {
-  background-color: #F39C12;
+  background-color: #FFA74D;
 }
 
 #kli {
   background-color: #3498DB;
 }
+
 
 .temp {
   font-size: 18vw;
