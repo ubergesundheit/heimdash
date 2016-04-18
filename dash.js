@@ -32,7 +32,8 @@ var setTime = function (firstRun) {
 
 var sourceConfig = {
   "heimdb": "https://geraldpape.io/heimdb/latest",
-  "sensebox": "https://api.opensensemap.org/boxes/57000b8745fd40c8196ad04c/sensors"
+  "sensebox": "http://opensensemap.org:8000/boxes/57000b8745fd40c8196ad04c/sensors"
+  //"sensebox": "https://api.opensensemap.org/boxes/57000b8745fd40c8196ad04c/sensors"
 };
 
 var config = {
