@@ -107,9 +107,19 @@ var fetchTheData = function (callbacks) {
       .catch(error => {
         //alert(error);
         console.log(error, key)
+        displayError(key)
       })
   );
 };
+
+var displayError = function (key) {
+  // for now, this only works for sensebox..
+  var tempnode = document.querySelector("#" + key + " > .temp");
+  if (tempnode) {
+    tempnode.classList.remove("loading")
+    tempnode.innerHTML = "&times;"
+  }
+}
 
 var handleHeimDB = function (data) {
   // response data contains an array with collection-items
