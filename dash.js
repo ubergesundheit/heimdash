@@ -152,7 +152,7 @@ var handleSensebox = function (data) {
       case "°C":
         senseboxData.temp = parseFloat(sensor.lastMeasurement.value);
     }
-    var ts = new Date(sensor.lastMeasurement.updatedAt);
+    var ts = new Date(sensor.lastMeasurement.createdAt);
     if (ts < firstTimestamp) {
       firstTimestamp = ts;
     }
