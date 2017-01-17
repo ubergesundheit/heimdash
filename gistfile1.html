@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html><!-- the "no-js" class is for Modernizr. -->
+
+<head >
+
+<meta charset="UTF-8">
+<title>HTML5-SKELETON Template</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+</head>
+
+<body>
+  <div id="vis"></div>
+
+
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//vega.github.io/vega/vega.min.js" charset="utf-8"></script>
+<script src="//vega.github.io/vega-lite/vega-lite.min.js" charset="utf-8"></script>
+<script src="//vega.github.io/vega-editor/vendor/vega-embed.min.js" charset="utf-8"></script>
+
+<script>
+
+var vlSpec = {
+  "description": "A simple bar chart with embedded data.",
+  "data": {"url": "http://geraldpape.io:8080/last"},
+  "mark": "line",
+  "encoding": {
+    "x": {
+      "field": "timestamp",
+      "type": "temporal",
+      "axis": {"ticks": 56,"format": "%H:%M"}
+    },
+    "y": {"field": "data.count","type": "quantitative"}
+  },
+  "config": {"cell": {"width": 800,"height": 600}}
+}
+
+var embedSpec = {
+  mode: "vega-lite",
+  spec: vlSpec
+}
+vg.embed("#vis", embedSpec, function(error, result) {
+  // Callback receiving the View instance and parsed Vega spec
+  // result.view is the View, which resides under the '#vis' element
+});
+
+
+
+
+</script>
+
+</body>
+</html>
