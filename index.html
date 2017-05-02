@@ -1,73 +1,69 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.de-DE,fetch"></script>
-<link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
-<link href="dash.css" rel="stylesheet" type="text/css" />
-<meta name="mobile-web-app-capable" content="yes">
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-<link rel="manifest" href="manifest.json">
-<!-- iOS stuff -->
-<link rel="apple-touch-icon" href="launcher-icon-3x.png">
-<meta name="apple-mobile-web-app-title" content="HeimDash">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<!-- End iOS stuff -->
-<!-- <script src="swipe.js"></script> -->
 
-<meta name="theme-color" content="#ff7f2a">
-<title>Dash</title>
+<head>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.de-DE,fetch"></script>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
+  <link href="dash.css" rel="stylesheet" type="text/css" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <!-- iOS stuff -->
+  <link rel="apple-touch-icon" href="launcher-icon-3x.png">
+  <meta name="apple-mobile-web-app-title" content="HeimDash">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- End iOS stuff -->
+
+  <meta name="theme-color" content="#ff7f2a">
+  <title>Dash</title>
+  <meta name="sensebox-id" content="57000b8745fd40c8196ad04c">
+  <meta name="sensebox-id" content="57c9bd55c28bed14005a4c5f">
 </head>
+
 <body>
-  <div id="toggleFullscreenBtnRow" class="row small-row top-row hide-fullscreen">
-    <div class="col cell" id="fullscreenbtn">Go to Fullscreen</div>
-  </div>
-  <div class="row small-row bottom-row show-fullscreen">
-    <div class="col cell" id="thetime">--:--</div>
-  </div>
   <div class="row">
     <div class="col cell" id="tmps_out" title="Draußen">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
-      <span data-default="" class="hum"></span>
-      <span data-default="" class="batt"></span>
+      <h1 data-default="-" class="temp" data-error-id="57000b8745fd40c8196ad04c" data-sensor-id="58f0bdd0ba279000119b9c97">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="58f0bdd0ba279000119b9c97"></span>
+      <span data-default="" class="hum" data-sensor-id="58f0bdd0ba279000119b9c98"></span>
+      <span data-default="" class="batt" data-sensor-id="58f0cea0ba279000119c497e"></span>
     </div>
     <div class="col cell" id="sensebox" title="senseBox">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
-      <span data-default="" class="hum"></span>
-      <span data-default="" class="baro"></span>
-      <span data-default="" class="lux"></span>
-      <span data-default="" class="uv"></span>
+      <h1 data-default="-" class="temp" data-error-id="57000b8745fd40c8196ad04c" data-sensor-id="57000b8745fd40c8196ad052">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="57000b8745fd40c8196ad052"></span>
+      <span data-default="" class="hum" data-sensor-id="57000b8745fd40c8196ad051"></span>
+      <span data-default="" class="baro" data-sensor-id="57000b8745fd40c8196ad050"></span>
     </div>
   </div>
   <div class="row">
     <div class="col cell" id="tmps_in1" title="Flur">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
-      <span data-default="" class="hum secondary-value"></span>
-      <span data-default="" class="batt secondary-value"></span>
+      <h1 data-default="-" class="temp" data-error-id="57c9bd55c28bed14005a4c5f" data-sensor-id="58f0b80dba279000119b6153">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="58f0b80dba279000119b6153"></span>
+      <span data-default="" class="hum secondary-value" data-sensor-id="58f0b80dba279000119b6154"></span>
+      <span data-default="" class="batt secondary-value" data-sensor-id="58f0cf4aba279000119c503a"></span>
     </div>
     <div class="col cell" id="tmps_in2" title="Schlafzimmer">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
-      <span data-default="" class="hum"></span>
+      <h1 data-default="-" class="temp" data-error-id="57c9bd55c28bed14005a4c5f" data-sensor-id="58f0b80dba279000119b6158">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="58f0b80dba279000119b6158"></span>
+      <span data-default="" class="hum" data-sensor-id="58f0b80dba279000119b6159"></span>
     </div>
   </div>
   <div class="row last-row">
     <div class="col cell" id="tmps_in0" title="Wohnzimmer">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
+      <h1 data-default="-" class="temp" data-error-id="57c9bd55c28bed14005a4c5f" data-sensor-id="58f0b80dba279000119b6152">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="58f0b80dba279000119b6152"></span>
     </div>
     <div class="col cell" id="tmps_in3" title="Wohnzimmer (Wohn)">
-      <h1 data-default="-" class="temp">-</h1>
-      <span data-default="" class="timestamp"></span>
-      <span data-default="" class="hum secondary-value"></span>
-      <span data-default="" class="baro secondary-value"></span>
+      <h1 data-default="-" class="temp" data-error-id="57c9bd55c28bed14005a4c5f" data-sensor-id="58f0b80dba279000119b6155">-</h1>
+      <span data-default="" class="timestamp" data-sensor-id="58f0b80dba279000119b6155"></span>
+      <span data-default="" class="hum secondary-value" data-sensor-id="58f0b80dba279000119b6156"></span>
+      <span data-default="" class="baro secondary-value" data-sensor-id="58f0b80dba279000119b6157"></span>
     </div>
   </div>
-<script src="dash.js"></script>
+  <script src="dash.js"></script>
 </body>
+
 </html>
