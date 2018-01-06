@@ -1,17 +1,5 @@
 'use strict';
-const dateFormatOptions = { weekday: 'long', hour: '2-digit', minute: '2-digit' };
-const DateFormatter = new Intl.DateTimeFormat('de-DE', dateFormatOptions);
-
-const theTimeDateFormatOptions = {
-  day: 'numeric',
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  hour: '2-digit',
-  minute: '2-digit'
-};
-
-const TheTimeDateFormatter = new Intl.DateTimeFormat('de-DE', theTimeDateFormatOptions);
+const timeagoInst = timeago();
 
 const fetchBox = function fetchBox(boxid) {
   return fetch(`https://api.opensensemap.org/boxes/${boxid}/sensors`)
@@ -31,7 +19,7 @@ const fetchBox = function fetchBox(boxid) {
       displayError(boxid);
     });
 };
-const fetchTheData = function fetchTheData() {
+const fetchTheData = async function fetchTheData() {
   // reset views..
   for (const elem of document.querySelectorAll('[data-default]')) {
     elem.innerHTML = elem.dataset.default;
@@ -41,8 +29,12 @@ const fetchTheData = function fetchTheData() {
   }
   // fetch the boxes
   for (const elem of document.querySelectorAll('meta[name="sensebox-id"]')) {
-    fetchBox(elem.content);
+    await fetchBox(elem.content);
   }
+
+  // use render method to render nodes in real time
+  timeagoInst.render(document.querySelectorAll('.timestamp'), 'de');
+
 };
 const renderValue = function renderValue(sensor) {
   const element = document.querySelector(`[data-sensor-id="${sensor._id}"]`);
@@ -54,7 +46,7 @@ const renderValue = function renderValue(sensor) {
     if (sensor.unit === '°C') {
       const timestampElement = document.querySelector(`.timestamp[data-sensor-id="${sensor._id}"]`);
 
-      timestampElement.innerHTML = `${prepareTimestamp(createdAt)}`;
+      timestampElement.dataset.timeago = createdAt;
     }
   }
 };
