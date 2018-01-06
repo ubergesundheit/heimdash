@@ -35,7 +35,9 @@ const fetchTheData = function fetchTheData() {
   // reset views..
   for (const elem of document.querySelectorAll('[data-default]')) {
     elem.innerHTML = elem.dataset.default;
-    elem.classList.add('loading');
+    if (elem.classList.contains('temp')) {
+      elem.classList.add('loading');
+    }
   }
   // fetch the boxes
   for (const elem of document.querySelectorAll('meta[name="sensebox-id"]')) {
@@ -53,7 +55,6 @@ const renderValue = function renderValue(sensor) {
       const timestampElement = document.querySelector(`.timestamp[data-sensor-id="${sensor._id}"]`);
 
       timestampElement.innerHTML = `${prepareTimestamp(createdAt)}`;
-      timestampElement.classList.remove('loading');
     }
   }
 };
