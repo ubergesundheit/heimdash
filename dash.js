@@ -28,6 +28,12 @@ const connectWebsocket = function connectWebsocket() {
     }
 
     connection = new WebSocket("ws://192.168.0.33:3000/ws");
+
+    connection.onerror = function(evt){
+      displayError("currConsumption")
+      const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
+      onlineIndicator.classList.remove("online");
+    };
     connection.onopen = function(evt) {
       const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
       onlineIndicator.classList.add("online");
@@ -37,7 +43,7 @@ const connectWebsocket = function connectWebsocket() {
 
       renderValue({
         _id: 'currConsumption',
-        unit: 'W',
+        unit: '',
         lastMeasurement: {
           value,
           createdAt
@@ -69,11 +75,12 @@ const fetchTheData = async function fetchTheData() {
 const renderValue = function renderValue(sensor) {
   const element = document.querySelector(`[data-sensor-id="${sensor._id}"]`);
   if (element) {
+    const { numDecimals } = element.dataset;
     const { value, createdAt } = sensor.lastMeasurement;
-    element.innerHTML = `${prepareValue(value)}${prepareUnit(sensor.unit)}`;
+    element.innerHTML = `${prepareValue(value, numDecimals)}${prepareUnit(sensor.unit)}`;
     element.classList.remove('loading');
     // we also want a timestamp, just use the one from temperature
-    if (sensor.unit === '°C' || sensor.unit === 'W') {
+    if (sensor.unit === '°C') {
       const timestampElement = document.querySelector(`.timestamp[data-sensor-id="${sensor._id}"]`);
 
       timestampElement.dataset.timeago = createdAt;
@@ -92,8 +99,8 @@ const displayError = function displayError(boxid) {
 const prepareTimestamp = function prepareTimestamp(timestamp) {
   return DateFormatter.format(new Date(timestamp));
 };
-const prepareValue = function prepareValue(value) {
-  return parseFloat(value).toFixed(1);
+const prepareValue = function prepareValue(value, numDecimals = 1) {
+  return parseFloat(value).toFixed(numDecimals);
 };
 const prepareUnit = function prepareUnit(unit) {
   return unit === '°C' ? '°' : ` ${unit}`;
