@@ -1,55 +1,76 @@
 'use strict';
 const timeagoInst = timeago();
 
-const fetchBox = function fetchBox(boxid) {
-  return fetch(`https://api.opensensemap.org/boxes/${boxid}/sensors`)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
+const fetchBox = async function fetchBox(boxid) {
+  try {
+    const response = await fetch(`https://api.opensensemap.org/boxes/${boxid}/sensors`)
+    if (!response.ok) {
       throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => {
-      for (const sensor of responseJson.sensors) {
-        renderValue(sensor);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      displayError(boxid);
-    });
+    }
+    const responseJson = await response.json();
+    for (const sensor of responseJson.sensors) {
+      renderValue(sensor);
+    }
+  } catch(err) {
+    console.log(err);
+    displayError(boxid);
+  }
 };
 
-let connection
+let wsConnection;
+
+const toggleWsOnlineIndicator = function toggleWsOnlineIndicator(online) {
+  const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
+  onlineIndicator.classList[(online === true ? 'add' : 'remove' )]('online');
+};
+
+const wsOnMessage = function wsOnMessage(evt) {
+  const [ createdAt, value ] = evt.data.split(',');
+
+  renderValue({
+    _id: 'currConsumption',
+    unit: '',
+    lastMeasurement: {
+      value,
+      createdAt
+    }
+   });
+};
+
+const wsOnAnything = function wsOnAnything(evt) {
+  let onlineState;
+  switch(evt.type) {
+    case 'error':
+      onlineState = false;
+      displayError("currConsumption")
+      break;
+    case 'close':
+      onlineState = false;
+      break;
+    case 'open':
+      onlineState = true;
+      break;
+  }
+  toggleWsOnlineIndicator(onlineState);
+};
+
 const connectWebsocket = function connectWebsocket() {
-  if (!connection || connection.readyState !== 1) {
-    if (connection) {
-      connection.close();
+  if (!wsConnection || wsConnection.readyState !== 1) {
+    if (wsConnection) {
+      wsConnection.removeEventListener('message', wsOnMessage);
+      wsConnection.removeEventListener('error', wsOnAnything);
+      wsConnection.removeEventListener('close', wsOnAnything);
+      wsConnection.removeEventListener('open', wsOnAnything);
+      wsConnection.close();
     }
 
-    connection = new WebSocket("ws://192.168.0.33:3000/ws");
+    wsConnection = new WebSocket("ws://192.168.0.33:3000/ws");
 
-    connection.onerror = function(evt){
-      displayError("currConsumption")
-      const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
-      onlineIndicator.classList.remove("online");
-    };
-    connection.onopen = function(evt) {
-      const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
-      onlineIndicator.classList.add("online");
-    };
-    connection.onmessage = function(evt) {
-      const [ createdAt, value ] = evt.data.split(',');
+    wsConnection.addEventListener('error', wsOnAnything);
+    wsConnection.addEventListener('close', wsOnAnything);
+    wsConnection.addEventListener('open', wsOnAnything);
 
-      renderValue({
-        _id: 'currConsumption',
-        unit: '',
-        lastMeasurement: {
-          value,
-          createdAt
-        }
-       });
-    };
+    wsConnection.addEventListener('message', wsOnMessage);
   }
 }
 const fetchTheData = async function fetchTheData() {
@@ -70,7 +91,6 @@ const fetchTheData = async function fetchTheData() {
 
   // use render method to render nodes in real time
   timeagoInst.render(document.querySelectorAll('.timestamp'), 'de');
-
 };
 const renderValue = function renderValue(sensor) {
   const element = document.querySelector(`[data-sensor-id="${sensor._id}"]`);
@@ -96,9 +116,6 @@ const displayError = function displayError(boxid) {
     }
   }
 };
-const prepareTimestamp = function prepareTimestamp(timestamp) {
-  return DateFormatter.format(new Date(timestamp));
-};
 const prepareValue = function prepareValue(value, numDecimals = 1) {
   return parseFloat(value).toFixed(numDecimals);
 };
@@ -108,29 +125,14 @@ const prepareUnit = function prepareUnit(unit) {
 
 fetchTheData(); // Set the name of the hidden property and the change event for visibility
 
-let hidden, visibilityChange;
-if (typeof document.hidden !== 'undefined') {
-  // Opera 12.10 and Firefox 18 and later support
-  hidden = 'hidden';
-  visibilityChange = 'visibilitychange';
-} else if (typeof document.mozHidden !== 'undefined') {
-  hidden = 'mozHidden';
-  visibilityChange = 'mozvisibilitychange';
-} else if (typeof document.msHidden !== 'undefined') {
-  hidden = 'msHidden';
-  visibilityChange = 'msvisibilitychange';
-} else if (typeof document.webkitHidden !== 'undefined') {
-  hidden = 'webkitHidden';
-  visibilityChange = 'webkitvisibilitychange';
-}
-function handleVisibilityChange() {
-  if (document[hidden]) {
+const handleVisibilityChange = function handleVisibilityChange () {
+  if (document.hidden) {
+   wsConnection.close();
   } else {
     fetchTheData();
   }
-} // Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
-  alert('This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.');
-} else {
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}
+};
+
+document.addEventListener('pagehide', handleVisibilityChange);
+document.addEventListener('pageshow', handleVisibilityChange);
+document.addEventListener('visibilitychange', handleVisibilityChange, false);
