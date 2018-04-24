@@ -19,6 +19,33 @@ const fetchBox = function fetchBox(boxid) {
       displayError(boxid);
     });
 };
+
+let connection
+const connectWebsocket = function connectWebsocket() {
+  if (!connection || connection.readyState !== 1) {
+    if (connection) {
+      connection.close();
+    }
+
+    connection = new WebSocket("ws://192.168.0.33:3000/ws");
+    connection.onopen = function(evt) {
+      const onlineIndicator = document.querySelector(`.onlineIndicator[data-sensor-id="currConsumption"]`);
+      onlineIndicator.classList.add("online");
+    };
+    connection.onmessage = function(evt) {
+      const [ createdAt, value ] = evt.data.split(',');
+
+      renderValue({
+        _id: 'currConsumption',
+        unit: 'W',
+        lastMeasurement: {
+          value,
+          createdAt
+        }
+       });
+    };
+  }
+}
 const fetchTheData = async function fetchTheData() {
   // reset views..
   for (const elem of document.querySelectorAll('[data-default]')) {
@@ -32,6 +59,9 @@ const fetchTheData = async function fetchTheData() {
     await fetchBox(elem.content);
   }
 
+  // connect websocket for power consumption
+  connectWebsocket();
+
   // use render method to render nodes in real time
   timeagoInst.render(document.querySelectorAll('.timestamp'), 'de');
 
@@ -43,7 +73,7 @@ const renderValue = function renderValue(sensor) {
     element.innerHTML = `${prepareValue(value)}${prepareUnit(sensor.unit)}`;
     element.classList.remove('loading');
     // we also want a timestamp, just use the one from temperature
-    if (sensor.unit === '°C') {
+    if (sensor.unit === '°C' || sensor.unit === 'W') {
       const timestampElement = document.querySelector(`.timestamp[data-sensor-id="${sensor._id}"]`);
 
       timestampElement.dataset.timeago = createdAt;
@@ -68,7 +98,9 @@ const prepareValue = function prepareValue(value) {
 const prepareUnit = function prepareUnit(unit) {
   return unit === '°C' ? '°' : ` ${unit}`;
 };
+
 fetchTheData(); // Set the name of the hidden property and the change event for visibility
+
 let hidden, visibilityChange;
 if (typeof document.hidden !== 'undefined') {
   // Opera 12.10 and Firefox 18 and later support
