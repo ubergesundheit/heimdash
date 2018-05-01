@@ -64,7 +64,7 @@ const connectWebsocket = function connectWebsocket() {
       wsConnection.close();
     }
 
-    wsConnection = new WebSocket("ws://192.168.0.33:3000/ws");
+    wsConnection = new WebSocket("ws://192.168.0.10:3000/ws");
 
     wsConnection.addEventListener('error', wsOnAnything);
     wsConnection.addEventListener('close', wsOnAnything);
